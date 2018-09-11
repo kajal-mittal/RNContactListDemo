@@ -1,4 +1,4 @@
-import { View, StyleSheet, TextInput } from 'react-native';
+import { View, StyleSheet, TextInput, AsyncStorage } from 'react-native';
 import React, { PureComponent } from 'react';
 import TextStyles from '../../theme/TextStyles';
 import FooterButton from '../../CommonComponents/FooterButton';
@@ -13,6 +13,7 @@ class AddContactScene extends PureComponent {
 			phoneNumber: ''
 		};
 	}
+
 	render() {
 		return (
 			<View style={styles.container}>
@@ -60,7 +61,7 @@ const styles = StyleSheet.create({
 	}
 });
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = state => {
 	return {
 		contacts: state.contacts
 	};
