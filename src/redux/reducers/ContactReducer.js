@@ -9,7 +9,7 @@ import { GET_ALL_CONTACTS, ADD_NEW_CONTACT } from '../actions/types';
   */
 
 const INITIAL_STATE = {
-	contact: [{ name: 'data' }]
+	contacts: []
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -32,11 +32,10 @@ export default (state = INITIAL_STATE, action) => {
 		 overwritten with a new value.
 		 */
 
-			return { ...state, contact: action.contact };
-		case ADD_NEW_CONTACT:
-			console.warn(action.contact + '' + state);
+			return { contacts: [...state.contacts, action.contact] };
 
-			return { ...state, contact: action.contact };
+		case ADD_NEW_CONTACT:
+			return { contacts: [...state.contacts, action.contact] };
 		default:
 			/*
 		We will just return the state. Return the initial state when nothing changes

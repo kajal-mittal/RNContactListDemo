@@ -1,20 +1,14 @@
-import { View, ListView, Text } from 'react-native';
+import { View, ListView, Text, TouchableOpacity } from 'react-native';
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
-import * as actions from '../../redux/actions';
+
 class HomeScene extends PureComponent {
 	constructor() {
 		super();
-		const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
-		this.state = {
-			dataSource: ds.cloneWithRows(['row 1', 'row 2'])
-		};
 	}
-	componentDidMount = () => {
-		this.props.GetAllContacts();
-	};
 
 	render() {
+		this.data = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 }).cloneWithRows(this.props.contacts);
 		return (
 			<View style={{ flex: 1 }}>
 				<View style={{ backgroundColor: 'blue', height: 50, width: '100%', flexDirection: 'row' }}>
@@ -28,33 +22,39 @@ class HomeScene extends PureComponent {
 						Add
 					</Text>
 				</View>
-				{/* {!!this.props.contact && <ListView dataSource={this.props.contact} renderRow={this.renderRow.bind(this)} />} */}
+
+				{!!this.props && !!this.props.contacts && this.props.contacts.length !== 0 ? (
+					<ListView dataSource={this.data} renderRow={this.renderRow.bind(this)} />
+				) : (
+					<Text>No Data Found</Text>
+				)}
 			</View>
 		);
 	}
-	renderRow(data) {
+	renderRow(data, itemIndex) {
 		return (
-			<Text
+			<TouchableOpacity
+				style={{
+					elevation: 4,
+					margin: 10,
+					padding: 10,
+					backgroundColor: 'white'
+				}}
 				onPress={() => {
-					this.props.navigation.navigate('ContactDetailScene');
+					this.props.navigation.navigate('ContactDetailScene', { index: itemIndex });
 				}}
 			>
-				{data.name}
-			</Text>
+				<Text style={{ fontSize: 15, fontStyle: 'bold', color: 'black' }}>{data.name}</Text>
+				<Text style={{ fontSize: 12 }}>{data.email}</Text>
+				<Text style={{ fontSize: 12 }}>{data.phoneNumber}</Text>
+			</TouchableOpacity>
 		);
 	}
 }
-const mapStateToProps = state => {
-	console.warn(state);
 
+function mapStateToProps(state) {
 	return {
-		contact: state.contact_reducer.contact
+		contacts: state.contact_reducer.contacts
 	};
-};
-
-// Pass it as the first argument to our connect function.
-
-export default connect(
-	mapStateToProps,
-	actions
-)(HomeScene);
+}
+export default connect(mapStateToProps)(HomeScene);

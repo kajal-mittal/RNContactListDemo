@@ -56,16 +56,13 @@ const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		paddingTop: 65,
-		paddingHorizontal: 40,
-		backgroundColor: 'white'
+		paddingHorizontal: 40
 	}
 });
 
-const mapStateToProps = state => {
-	console.warn(state.contact);
-
+const mapStateToProps = (state, ownProps) => {
 	return {
-		createContact: state.contact_reducer.createContact
+		contacts: state.contacts
 	};
 };
 const mapDispatchToProps = dispatch => {
