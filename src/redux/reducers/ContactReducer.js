@@ -1,5 +1,4 @@
 import { GET_ALL_CONTACTS, ADD_NEW_CONTACT } from '../actions/types';
-
 /* Remember that TEXT_CHANGED should be defined and must have a value otherwise it
   will be undefined and no error would popup and in the reducer we will have a
   case of undefined
@@ -35,6 +34,8 @@ export default (state = INITIAL_STATE, action) => {
 			return { contacts: [...state.contacts, action.contact] };
 
 		case ADD_NEW_CONTACT:
+			const contacts = [...state.contacts, action.contact];
+
 			return { contacts: [...state.contacts, action.contact] };
 		default:
 			/*

@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { TouchableOpacity, StyleSheet, Text } from 'react-native';
 
-export default class FooterButton extends PureComponent {
+export default class CommonButton extends PureComponent {
 	render() {
 		return (
 			<TouchableOpacity style={[styles.footerButton, this.props.style]} onPress={this.props.onPress}>

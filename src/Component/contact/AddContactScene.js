@@ -1,8 +1,8 @@
 import { View, StyleSheet, TextInput, AsyncStorage } from 'react-native';
-import React, { PureComponent } from 'react';
+import React, { PureComponent } from '../../../../../Library/Caches/typescript/2.9/node_modules/@types/react';
 import TextStyles from '../../theme/TextStyles';
-import FooterButton from '../../CommonComponents/FooterButton';
-import { connect } from 'react-redux';
+import CommonButton from '../../CommonComponents/CommonButton';
+import { connect } from '../../../../../Library/Caches/typescript/2.9/node_modules/@types/react-redux';
 import * as actions from '../../redux/actions';
 class AddContactScene extends PureComponent {
 	constructor(props) {
@@ -14,14 +14,14 @@ class AddContactScene extends PureComponent {
 		};
 	}
 	_storeData = async () => {
+		let contact = {
+			name: this.state.name,
+			email: this.state.email,
+			phoneNumber: this.state.phoneNumber
+		};
+		this.props.createContact(contact);
 		try {
-			const value = await AsyncStorage.setItem('@MyContacts', JSON.stringify(this.props.contacts));
-			if (value !== null) {
-				// We have data!!
-				this.setState({ contact: JSON.parse(value) });
-
-				console.warn('data is' + JSON.parse(value));
-			}
+			await AsyncStorage.setItem('@MYCONTACTS', JSON.stringify(this.props.contacts));
 		} catch (error) {
 			// Error retrieving data
 		}
@@ -51,17 +51,7 @@ class AddContactScene extends PureComponent {
 						this.setState({ phoneNumber: text });
 					}}
 				/>
-				<FooterButton
-					title={'Add Contact'}
-					onPress={() => {
-						let contact = {
-							name: this.state.name,
-							email: this.state.email,
-							phoneNumber: this.state.phoneNumber
-						};
-						this.props.createContact(contact);
-					}}
-				/>
+				<CommonButton title={'Add Contact'} onPress={this._storeData} />
 			</View>
 		);
 	}

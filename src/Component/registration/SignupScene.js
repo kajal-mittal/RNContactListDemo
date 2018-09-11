@@ -1,7 +1,7 @@
 import { View, StyleSheet, TextInput } from 'react-native';
 import React, { PureComponent } from 'react';
 import TextStyles from '../../theme/TextStyles';
-import FooterButton from '../../CommonComponents/FooterButton';
+import CommonButton from '../../CommonComponents/CommonButton';
 
 export default class SignupScene extends PureComponent {
 	render() {
@@ -17,7 +17,7 @@ export default class SignupScene extends PureComponent {
 					style={[TextStyles.formInput, { marginBottom: 20 }]}
 				/>
 
-				<FooterButton title={'Signup'} onPress={() => this.props.navigation.navigate('Home')} />
+				<CommonButton title={'Signup'} onPress={() => this.props.navigation.navigate('Home')} />
 			</View>
 		);
 	}

@@ -1,6 +1,6 @@
 import { View, ListView, Text, TouchableOpacity, AsyncStorage } from 'react-native';
-import React, { PureComponent } from 'react';
-import { connect } from 'react-redux';
+import React, { PureComponent } from '../../../../../Library/Caches/typescript/2.9/node_modules/@types/react';
+import { connect } from '../../../../../Library/Caches/typescript/2.9/node_modules/@types/react-redux';
 
 class HomeScene extends PureComponent {
 	constructor() {
@@ -9,30 +9,23 @@ class HomeScene extends PureComponent {
 			contact: []
 		};
 	}
-	_storeData = async () => {
-		try {
-			await AsyncStorage.setItem('@MyContacts', JSON.stringify(this.props.contacts));
-		} catch (error) {
-			// Error saving data
-			console.warn('Error to save contacts');
-		}
-	};
+
 	componentDidMount = () => {
-		this._storeData();
 		this._retrieveData();
 	};
 
 	_retrieveData = async () => {
 		try {
-			const value = await AsyncStorage.getItem('@MyContacts');
+			const value = await AsyncStorage.getItem('@MYCONTACTS');
 			if (value !== null) {
 				// We have data!!
 				this.setState({ contact: JSON.parse(value) });
 
-				console.warn('data is' + JSON.parse(value));
+				console.log('data is' + JSON.parse(value));
 			}
 		} catch (error) {
 			// Error retrieving data
+			console.log('data is' + error);
 		}
 	};
 
@@ -52,7 +45,7 @@ class HomeScene extends PureComponent {
 					</Text>
 				</View>
 
-				{!!this.props && !!this.props.contacts && this. !== 0 ? (
+				{!!this.props && !!this.props.contacts && this.props.contacts !== 0 ? (
 					<ListView dataSource={this.data} renderRow={this.renderRow.bind(this)} />
 				) : (
 					<Text>No Data Found</Text>

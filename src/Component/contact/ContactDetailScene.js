@@ -1,8 +1,8 @@
 import { View, StyleSheet, TextInput } from 'react-native';
-import React, { PureComponent } from 'react';
+import React, { PureComponent } from '../../../../../Library/Caches/typescript/2.9/node_modules/@types/react';
 import TextStyles from '../../theme/TextStyles';
-import FooterButton from '../../CommonComponents/FooterButton';
-import { connect } from 'react-redux';
+import CommonButton from '../../CommonComponents/CommonButton';
+import { connect } from '../../../../../Library/Caches/typescript/2.9/node_modules/@types/react-redux';
 class ContactDetailScene extends PureComponent {
 	render() {
 		const { navigation } = this.props;
@@ -22,7 +22,7 @@ class ContactDetailScene extends PureComponent {
 					style={TextStyles.formInput}
 					value={this.props.contacts[index].phoneNumber}
 				/>
-				<FooterButton title={'Update Contact'} onPress={() => this.props.navigation.navigate('Home')} />
+				<CommonButton title={'Update Contact'} onPress={() => this.props.navigation.navigate('Home')} />
 			</View>
 		);
 	}
