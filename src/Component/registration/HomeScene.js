@@ -31,7 +31,7 @@ class HomeScene extends PureComponent {
 			</View>
 		);
 	}
-	renderRow(data, itemIndex) {
+	renderRow(data, sectionID, rowID, itemIndex, itemID) {
 		return (
 			<TouchableOpacity
 				style={{
@@ -41,7 +41,7 @@ class HomeScene extends PureComponent {
 					backgroundColor: 'white'
 				}}
 				onPress={() => {
-					this.props.navigation.navigate('ContactDetailScene', { index: itemIndex });
+					this.props.navigation.navigate('ContactDetailScene', { index: rowID });
 				}}
 			>
 				<Text style={{ fontSize: 15, fontStyle: 'bold', color: 'black' }}>{data.name}</Text>

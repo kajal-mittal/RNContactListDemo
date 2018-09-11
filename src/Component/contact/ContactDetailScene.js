@@ -3,7 +3,7 @@ import React, { PureComponent } from 'react';
 import TextStyles from '../../theme/TextStyles';
 import FooterButton from '../../CommonComponents/FooterButton';
 import { connect } from 'react-redux';
-export default class ContactDetailScene extends PureComponent {
+class ContactDetailScene extends PureComponent {
 	render() {
 		const { navigation } = this.props;
 		let index = navigation.getParam('index', 0);
