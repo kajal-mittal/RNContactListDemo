@@ -13,6 +13,19 @@ class AddContactScene extends PureComponent {
 			phoneNumber: ''
 		};
 	}
+	_storeData = async () => {
+		try {
+			const value = await AsyncStorage.setItem('@MyContacts', JSON.stringify(this.props.contacts));
+			if (value !== null) {
+				// We have data!!
+				this.setState({ contact: JSON.parse(value) });
+
+				console.warn('data is' + JSON.parse(value));
+			}
+		} catch (error) {
+			// Error retrieving data
+		}
+	};
 
 	render() {
 		return (
