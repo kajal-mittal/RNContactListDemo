@@ -1,7 +1,8 @@
 import { View, ListView, Text } from 'react-native';
 import React, { PureComponent } from 'react';
-
-export default class HomeScene extends PureComponent {
+import { connect } from 'react-redux';
+import * as actions from '../../redux/actions';
+class HomeScene extends PureComponent {
 	constructor() {
 		super();
 		const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
@@ -39,3 +40,15 @@ export default class HomeScene extends PureComponent {
 		);
 	}
 }
+const mapStateToProps = state => {
+	return {
+		contact: state.contact_reducer.contact
+	};
+};
+
+// Pass it as the first argument to our connect function.
+
+export default connect(
+	mapStateToProps,
+	actions
+)(HomeScene);
