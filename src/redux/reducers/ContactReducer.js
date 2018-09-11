@@ -1,4 +1,4 @@
-import { GET_ALL_CONTACTS } from '../actions/types';
+import { GET_ALL_CONTACTS, ADD_NEW_CONTACT } from '../actions/types';
 
 /* Remember that TEXT_CHANGED should be defined and must have a value otherwise it
   will be undefined and no error would popup and in the reducer we will have a
@@ -9,7 +9,7 @@ import { GET_ALL_CONTACTS } from '../actions/types';
   */
 
 const INITIAL_STATE = {
-	text: ''
+	contact: [{ name: 'data' }]
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -32,8 +32,11 @@ export default (state = INITIAL_STATE, action) => {
 		 overwritten with a new value.
 		 */
 
-			return { ...state, contact: action.payload };
+			return { ...state, contact: action.contact };
+		case ADD_NEW_CONTACT:
+			console.warn(action.contact + '' + state);
 
+			return { ...state, contact: action.contact };
 		default:
 			/*
 		We will just return the state. Return the initial state when nothing changes

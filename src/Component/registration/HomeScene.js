@@ -10,6 +10,10 @@ class HomeScene extends PureComponent {
 			dataSource: ds.cloneWithRows(['row 1', 'row 2'])
 		};
 	}
+	componentDidMount = () => {
+		this.props.GetAllContacts();
+	};
+
 	render() {
 		return (
 			<View style={{ flex: 1 }}>
@@ -24,7 +28,7 @@ class HomeScene extends PureComponent {
 						Add
 					</Text>
 				</View>
-				<ListView dataSource={this.state.dataSource} renderRow={this.renderRow.bind(this)} />
+				{/* {!!this.props.contact && <ListView dataSource={this.props.contact} renderRow={this.renderRow.bind(this)} />} */}
 			</View>
 		);
 	}
@@ -35,12 +39,14 @@ class HomeScene extends PureComponent {
 					this.props.navigation.navigate('ContactDetailScene');
 				}}
 			>
-				{'Kajal'}
+				{data.name}
 			</Text>
 		);
 	}
 }
 const mapStateToProps = state => {
+	console.warn(state);
+
 	return {
 		contact: state.contact_reducer.contact
 	};
