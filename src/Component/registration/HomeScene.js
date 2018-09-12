@@ -1,15 +1,36 @@
-import { View, ListView, Text } from 'react-native';
+import { View, ListView, Text, TouchableOpacity, AsyncStorage } from 'react-native';
 import React, { PureComponent } from 'react';
+import { connect } from 'react-redux';
 
-export default class HomeScene extends PureComponent {
+class HomeScene extends PureComponent {
 	constructor() {
 		super();
-		const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 		this.state = {
-			dataSource: ds.cloneWithRows(['row 1', 'row 2'])
+			contact: []
 		};
 	}
+
+	componentDidMount = () => {
+		this._retrieveData();
+	};
+
+	_retrieveData = async () => {
+		try {
+			const value = await AsyncStorage.getItem('@MYCONTACTS');
+			if (value !== null) {
+				// We have data!!
+				this.setState({ contact: JSON.parse(value) });
+
+				console.log('data is' + JSON.parse(value));
+			}
+		} catch (error) {
+			// Error retrieving data
+			console.log('data is' + error);
+		}
+	};
+
 	render() {
+		this.data = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 }).cloneWithRows(this.props.contacts);
 		return (
 			<View style={{ flex: 1 }}>
 				<View style={{ backgroundColor: 'blue', height: 50, width: '100%', flexDirection: 'row' }}>
@@ -23,19 +44,39 @@ export default class HomeScene extends PureComponent {
 						Add
 					</Text>
 				</View>
-				<ListView dataSource={this.state.dataSource} renderRow={this.renderRow.bind(this)} />
+
+				{!!this.props && !!this.props.contacts && this.props.contacts !== 0 ? (
+					<ListView dataSource={this.data} renderRow={this.renderRow.bind(this)} />
+				) : (
+					<Text>No Data Found</Text>
+				)}
 			</View>
 		);
 	}
-	renderRow(data) {
+	renderRow(data, sectionID, rowID, itemIndex, itemID) {
 		return (
-			<Text
+			<TouchableOpacity
+				style={{
+					elevation: 4,
+					margin: 10,
+					padding: 10,
+					backgroundColor: 'white'
+				}}
 				onPress={() => {
-					this.props.navigation.navigate('ContactDetailScene');
+					this.props.navigation.navigate('ContactDetailScene', { index: rowID });
 				}}
 			>
-				{'Kajal'}
-			</Text>
+				<Text style={{ fontSize: 15, fontStyle: 'bold', color: 'black' }}>{data.name}</Text>
+				<Text style={{ fontSize: 12 }}>{data.email}</Text>
+				<Text style={{ fontSize: 12 }}>{data.phoneNumber}</Text>
+			</TouchableOpacity>
 		);
 	}
 }
+
+function mapStateToProps(state) {
+	return {
+		contacts: state.contact_reducer.contacts
+	};
+}
+export default connect(mapStateToProps)(HomeScene);

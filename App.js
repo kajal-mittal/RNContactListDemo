@@ -35,10 +35,16 @@ const AppFlow = createStackNavigator({
 		}
 	},
 	AddContact: {
-		screen: AddContactScene
+		screen: AddContactScene,
+		navigationOptions: {
+			header: null
+		}
 	},
 	ContactDetailScene: {
-		screen: ContactDetailScene
+		screen: ContactDetailScene,
+		navigationOptions: {
+			header: null
+		}
 	}
 });
 export default class App extends PureComponent {
