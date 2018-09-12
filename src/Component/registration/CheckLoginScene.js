@@ -20,8 +20,8 @@ export default class CheckLoginScene extends PureComponent {
 
 	render() {
 		return (
-			<View style={ViewStyles.container}>
-				<ActivityIndicator />
+			<View style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
+				<ActivityIndicator style={{ width: 200, height: 200 }} />
 				<StatusBar barStyle="default" />
 			</View>
 		);

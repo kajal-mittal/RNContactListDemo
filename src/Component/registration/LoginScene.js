@@ -9,13 +9,6 @@ export default class LoginScene extends PureComponent {
 	constructor(props) {
 		super(props);
 	}
-	// componentWillMount = () => {};
-	// checkLogin = async function() {
-	// 	const checkLogin = await AsyncStorage.getItem('@LoginComplete');
-	// 	if (!!checkLogin && checkLogin === 'true') {
-	// 		this.props.navigation.navigate('Home');
-	// 	}
-	// };
 
 	render() {
 		return (
