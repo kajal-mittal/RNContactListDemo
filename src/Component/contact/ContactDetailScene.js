@@ -1,9 +1,11 @@
-import { View, TextInput, AsyncStorage } from 'react-native';
+import { View, TextInput } from 'react-native';
 import React, { PureComponent } from 'react';
 import TextStyles from '../../theme/TextStyles';
 import ViewStyles from '../../theme/ViewStyles';
 import CommonButton from '../../CommonComponents/CommonButton';
 import { connect } from 'react-redux';
+import { contactDelete } from '../../redux/actions';
+import * as actions from '../../redux/actions';
 class ContactDetailScene extends PureComponent {
 	constructor(props) {
 		super(props);
@@ -15,19 +17,9 @@ class ContactDetailScene extends PureComponent {
 			phoneNumber: this.props.navigation.state.params.rowData.phoneNumber
 		};
 	}
-	componentWillMount = () => {
-		this._retrieveData();
-	};
-	_retrieveData = async () => {
-		AsyncStorage.getItem('contactsList')
-			.then(value => {
-				const contacts = JSON.parse(value);
-				this.setState({ contact: contacts });
-			})
-			.catch(error => {});
-	};
 
 	render() {
+		//console.error(this.props.navigation.state.params.index);
 		return (
 			<View style={ViewStyles.container}>
 				<TextInput
@@ -53,6 +45,14 @@ class ContactDetailScene extends PureComponent {
 				<CommonButton
 					title={'Update Contact'}
 					onPress={() => {
+						const id = this.props.navigation.state.params.index;
+						this.props.contactDelete({ id });
+						let contact = {
+							name: this.state.name,
+							email: this.state.email,
+							phoneNumber: this.state.phoneNumber
+						};
+						this.props.createContact(contact);
 						this.props.navigation.navigate('Home');
 					}}
 				/>
@@ -63,7 +63,16 @@ class ContactDetailScene extends PureComponent {
 
 function mapStateToProps(state) {
 	return {
-		contacts: state.contact_reducer.contacts
+		contacts: state.contacts
 	};
 }
-export default connect(mapStateToProps)(ContactDetailScene);
+const mapDispatchToProps = dispatch => {
+	return {
+		createContact: contact => dispatch(actions.createContact(contact)),
+		contactDelete
+	};
+};
+export default connect(
+	mapStateToProps,
+	mapDispatchToProps
+)(ContactDetailScene);

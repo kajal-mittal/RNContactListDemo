@@ -13,6 +13,17 @@ export default class HomeScene extends PureComponent {
 		this._retrieveData();
 		this.setLoginData();
 	};
+	componentDidMount = () => {
+		this._willFocus = this.props.navigation.addListener('willFocus', () => {
+			setTimeout(() => {
+				this._retrieveData();
+			}, 900);
+		});
+	};
+	componentWillUnmount() {
+		this._willFocus.remove();
+	}
+
 	setLoginData = async function() {
 		try {
 			const checkLogin = await AsyncStorage.getItem('@LoginComplete');
@@ -25,8 +36,11 @@ export default class HomeScene extends PureComponent {
 	_retrieveData = async () => {
 		AsyncStorage.getItem('contactsList')
 			.then(value => {
-				const contacts = JSON.parse(value);
-				this.setState({ contact: contacts });
+				if (value != null) {
+					const contacts = JSON.parse(value);
+
+					this.setState({ contact: contacts });
+				}
 			})
 			.catch(error => {});
 	};
@@ -74,7 +88,7 @@ export default class HomeScene extends PureComponent {
 					backgroundColor: 'white'
 				}}
 				onPress={() => {
-					this.props.navigation.navigate('ContactDetailScene', { rowData: data });
+					this.props.navigation.navigate('ContactDetailScene', { rowData: data, index: rowID });
 				}}
 			>
 				<Text style={{ fontSize: 15, fontStyle: 'bold', color: 'black' }}>{data.name}</Text>

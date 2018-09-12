@@ -1,4 +1,4 @@
-import { View, StyleSheet, TextInput, AsyncStorage, Alert } from 'react-native';
+import { View, TextInput, Alert } from 'react-native';
 import React, { PureComponent } from 'react';
 import TextStyles from '../../theme/TextStyles';
 import ViewStyles from '../../theme/ViewStyles';
@@ -14,7 +14,7 @@ class AddContactScene extends PureComponent {
 			phoneNumber: ''
 		};
 	}
-	_storeData = async () => {
+	_storeData = () => {
 		if (!!this.state.name && !!this.state.email && !!this.state.phoneNumber) {
 			let contact = {
 				name: this.state.name,
@@ -22,13 +22,6 @@ class AddContactScene extends PureComponent {
 				phoneNumber: this.state.phoneNumber
 			};
 			this.props.createContact(contact);
-
-			try {
-				await AsyncStorage.setItem('@Contact', JSON.stringify(this.props.contacts));
-			} catch (error) {
-				console.error('Save data' + error);
-				// Error retrieving data
-			}
 			this.props.navigation.goBack();
 		} else {
 			Alert.alert('Error', 'Please enter Contact details.', [
