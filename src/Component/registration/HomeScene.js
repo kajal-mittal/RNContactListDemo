@@ -1,8 +1,7 @@
-import { View, ListView, Text, TouchableOpacity, AsyncStorage } from 'react-native';
+import { View, ListView, Text, TouchableOpacity, AsyncStorage, StyleSheet } from 'react-native';
 import React, { PureComponent } from 'react';
-import { connect } from 'react-redux';
 
-class HomeScene extends PureComponent {
+export default class HomeScene extends PureComponent {
 	constructor() {
 		super();
 		this.state = {
@@ -10,7 +9,7 @@ class HomeScene extends PureComponent {
 		};
 	}
 
-	componentDidMount = () => {
+	componentWillMount = () => {
 		this._retrieveData();
 		this.setLoginData();
 	};
@@ -24,31 +23,25 @@ class HomeScene extends PureComponent {
 	};
 
 	_retrieveData = async () => {
-		try {
-			const value = await AsyncStorage.getItem('@MYCONTACTS');
-			if (value !== null) {
-				// We have data!!
-				this.setState({ contact: JSON.parse(value) });
-
-				console.log('data is' + JSON.parse(value));
-			}
-		} catch (error) {
-			// Error retrieving data
-			console.log('data is' + error);
-		}
+		AsyncStorage.getItem('contactsList')
+			.then(value => {
+				const contacts = JSON.parse(value);
+				this.setState({ contact: contacts });
+			})
+			.catch(error => {});
 	};
 
 	render() {
-		this.data = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 }).cloneWithRows(this.props.contacts);
+		this.data = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 }).cloneWithRows(this.state.contact);
 		return (
 			<View style={{ flex: 1 }}>
-				<View style={{ backgroundColor: 'blue', height: 50, width: '100%', flexDirection: 'row' }}>
-					<Text style={{ color: 'white', alignSelf: 'center', flex: 0.9 }} onPress={() => this._signOutAsync()}>
+				<View style={styles.header}>
+					<Text style={[styles.headerText, { flex: 0.9 }]} onPress={() => this._signOutAsync()}>
 						{' '}
 						Logout
 					</Text>
 					<Text
-						style={{ color: 'white', alignSelf: 'center', flex: 0.1 }}
+						style={[styles.headerText, { flex: 0.1 }]}
 						onPress={() => {
 							this.props.navigation.navigate('AddContact');
 						}}
@@ -57,17 +50,19 @@ class HomeScene extends PureComponent {
 					</Text>
 				</View>
 
-				{!!this.props && !!this.props.contacts && this.props.contacts !== 0 ? (
+				{this.state.contact.length !== 0 ? (
 					<ListView dataSource={this.data} renderRow={this.renderRow.bind(this)} />
 				) : (
-					<Text>No Data Found</Text>
+					<Text style={{ flex: 1, alignSelf: 'center', justifyContent: 'center', alignItems: 'center', fontSize: 30 }}>
+						No Data Found
+					</Text>
 				)}
 			</View>
 		);
 	}
 	_signOutAsync = async () => {
 		await AsyncStorage.clear();
-		this.props.navigation.navigate('CheckLoginScene');
+		this.props.navigation.goBack();
 	};
 	renderRow(data, sectionID, rowID, itemIndex, itemID) {
 		return (
@@ -79,7 +74,7 @@ class HomeScene extends PureComponent {
 					backgroundColor: 'white'
 				}}
 				onPress={() => {
-					this.props.navigation.navigate('ContactDetailScene', { index: rowID });
+					this.props.navigation.navigate('ContactDetailScene', { rowData: data });
 				}}
 			>
 				<Text style={{ fontSize: 15, fontStyle: 'bold', color: 'black' }}>{data.name}</Text>
@@ -89,10 +84,15 @@ class HomeScene extends PureComponent {
 		);
 	}
 }
-
-function mapStateToProps(state) {
-	return {
-		contacts: state.contact_reducer.contacts
-	};
-}
-export default connect(mapStateToProps)(HomeScene);
+const styles = StyleSheet.create({
+	header: {
+		backgroundColor: 'blue',
+		height: 50,
+		width: '100%',
+		flexDirection: 'row'
+	},
+	headerText: {
+		color: 'white',
+		alignSelf: 'center'
+	}
+});
