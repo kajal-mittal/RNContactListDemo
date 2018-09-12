@@ -1,4 +1,4 @@
-import { View, ListView, Text, TouchableOpacity, AsyncStorage, StyleSheet } from 'react-native';
+import { View, ListView, Text, TouchableOpacity, AsyncStorage, StyleSheet, BackHandler } from 'react-native';
 import React, { PureComponent } from 'react';
 
 export default class HomeScene extends PureComponent {
@@ -13,15 +13,22 @@ export default class HomeScene extends PureComponent {
 		this._retrieveData();
 		this.setLoginData();
 	};
+
+	handleBackPress = () => {
+		BackHandler.exitApp();
+	};
+
 	componentDidMount = () => {
+		BackHandler.addEventListener('hardwareBackPress', this.handleBackPress);
 		this._willFocus = this.props.navigation.addListener('willFocus', () => {
 			setTimeout(() => {
 				this._retrieveData();
-			}, 900);
+			}, 500);
 		});
 	};
 	componentWillUnmount() {
 		this._willFocus.remove();
+		BackHandler.removeEventListener('hardwareBackPress', this.handleBackPress);
 	}
 
 	setLoginData = async function() {
@@ -38,7 +45,6 @@ export default class HomeScene extends PureComponent {
 			.then(value => {
 				if (value != null) {
 					const contacts = JSON.parse(value);
-
 					this.setState({ contact: contacts });
 				}
 			})
@@ -50,33 +56,36 @@ export default class HomeScene extends PureComponent {
 		return (
 			<View style={{ flex: 1 }}>
 				<View style={styles.header}>
-					<Text style={[styles.headerText, { flex: 0.9 }]} onPress={() => this._signOutAsync()}>
-						{' '}
-						Logout
-					</Text>
-					<Text
-						style={[styles.headerText, { flex: 0.1 }]}
-						onPress={() => {
-							this.props.navigation.navigate('AddContact');
-						}}
-					>
-						Add
-					</Text>
+					<View style={{ flex: 0.8, marginLeft: 20 }}>
+						<Text style={styles.headerText} onPress={() => this._signOutAsync()}>
+							Logout
+						</Text>
+					</View>
+					<View style={{ flex: 0.2 }}>
+						<Text
+							style={styles.headerText}
+							onPress={() => {
+								this.props.navigation.navigate('AddContact');
+							}}
+						>
+							Add
+						</Text>
+					</View>
 				</View>
 
 				{this.state.contact.length !== 0 ? (
 					<ListView dataSource={this.data} renderRow={this.renderRow.bind(this)} />
 				) : (
-					<Text style={{ flex: 1, alignSelf: 'center', justifyContent: 'center', alignItems: 'center', fontSize: 30 }}>
-						No Data Found
-					</Text>
+					<View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+						<Text style={{ alignSelf: 'center', fontSize: 30 }}>No Data Found</Text>
+					</View>
 				)}
 			</View>
 		);
 	}
 	_signOutAsync = async () => {
 		await AsyncStorage.clear();
-		this.props.navigation.navigate('Login');
+		this.props.navigation.pop();
 	};
 	renderRow(data, sectionID, rowID, itemIndex, itemID) {
 		return (
@@ -103,10 +112,11 @@ const styles = StyleSheet.create({
 		backgroundColor: 'blue',
 		height: 50,
 		width: '100%',
+		justifyContent: 'center',
+		alignItems: 'center',
 		flexDirection: 'row'
 	},
 	headerText: {
-		color: 'white',
-		alignSelf: 'center'
+		color: 'white'
 	}
 });

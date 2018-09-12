@@ -1,4 +1,4 @@
-import { View, TextInput, AsyncStorage } from 'react-native';
+import { View, TextInput, BackHandler } from 'react-native';
 import React, { PureComponent } from 'react';
 import TextStyles from '../../theme/TextStyles';
 import ViewStyles from '../../theme/ViewStyles';
@@ -9,6 +9,16 @@ export default class LoginScene extends PureComponent {
 	constructor(props) {
 		super(props);
 	}
+	componentDidMount() {
+		BackHandler.addEventListener('hardwareBackPress', this.handleBackPress);
+	}
+
+	componentWillUnmount() {
+		BackHandler.removeEventListener('hardwareBackPress', this.handleBackPress);
+	}
+	handleBackPress = () => {
+		BackHandler.exitApp();
+	};
 
 	render() {
 		return (
