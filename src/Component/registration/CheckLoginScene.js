@@ -1,12 +1,15 @@
 import { View, AsyncStorage, ActivityIndicator, StatusBar } from 'react-native';
 import React, { PureComponent } from 'react';
 
-import ViewStyles from '../../theme/ViewStyles';
-
 export default class CheckLoginScene extends PureComponent {
 	constructor(props) {
 		super(props);
-		this.checkLogin();
+	}
+	componentDidMount = () => {
+		this._willFocus = this.props.navigation.addListener('willFocus', () => this.checkLogin());
+	};
+	componentWillUnmount() {
+		this._willFocus.remove();
 	}
 
 	checkLogin = async function() {

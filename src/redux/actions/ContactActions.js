@@ -30,3 +30,22 @@ export const createContact = contact => {
 			});
 	};
 };
+export const contactDelete = id => {
+	return dispatch => {
+		AsyncStorage.getItem('contactsList')
+			.then(value => {
+				const contacts = JSON.parse(value);
+				contacts.splice(id, 1);
+				AsyncStorage.setItem('contactsList', JSON.stringify(contacts))
+					.then(() => {
+						dispatch({ type: ADD_NEW_CONTACT, contact: contacts });
+					})
+					.catch(error => {
+						console.error(error);
+					});
+			})
+			.catch(error => {
+				console.error(error);
+			});
+	};
+};
