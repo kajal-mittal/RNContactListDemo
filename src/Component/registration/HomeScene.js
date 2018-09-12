@@ -76,7 +76,7 @@ export default class HomeScene extends PureComponent {
 	}
 	_signOutAsync = async () => {
 		await AsyncStorage.clear();
-		this.props.navigation.goBack();
+		this.props.navigation.navigate('Login');
 	};
 	renderRow(data, sectionID, rowID, itemIndex, itemID) {
 		return (

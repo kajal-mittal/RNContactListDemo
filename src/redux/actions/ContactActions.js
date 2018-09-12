@@ -30,7 +30,7 @@ export const createContact = contact => {
 			});
 	};
 };
-export const contactDelete = ({ id }) => {
+export const contactDelete = id => {
 	return dispatch => {
 		AsyncStorage.getItem('contactsList')
 			.then(value => {

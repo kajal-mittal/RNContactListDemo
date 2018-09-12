@@ -1,10 +1,9 @@
-import { View, TextInput } from 'react-native';
+import { View, TextInput, AsyncStorage } from 'react-native';
 import React, { PureComponent } from 'react';
 import TextStyles from '../../theme/TextStyles';
 import ViewStyles from '../../theme/ViewStyles';
 import CommonButton from '../../CommonComponents/CommonButton';
 import { connect } from 'react-redux';
-import { contactDelete } from '../../redux/actions';
 import * as actions from '../../redux/actions';
 class ContactDetailScene extends PureComponent {
 	constructor(props) {
@@ -47,13 +46,16 @@ class ContactDetailScene extends PureComponent {
 					onPress={() => {
 						const id = this.props.navigation.state.params.index;
 						this.props.contactDelete({ id });
-						let contact = {
-							name: this.state.name,
-							email: this.state.email,
-							phoneNumber: this.state.phoneNumber
-						};
-						this.props.createContact(contact);
-						this.props.navigation.navigate('Home');
+						setTimeout(() => {
+							let contact = {
+								name: this.state.name,
+								email: this.state.email,
+								phoneNumber: this.state.phoneNumber
+							};
+
+							this.props.createContact(contact);
+							this.props.navigation.navigate('Home');
+						}, 500);
 					}}
 				/>
 			</View>
@@ -69,7 +71,7 @@ function mapStateToProps(state) {
 const mapDispatchToProps = dispatch => {
 	return {
 		createContact: contact => dispatch(actions.createContact(contact)),
-		contactDelete
+		contactDelete: id => dispatch(actions.contactDelete(id))
 	};
 };
 export default connect(
