@@ -1,13 +1,14 @@
-import { View, StyleSheet, TextInput } from 'react-native';
+import { View, TextInput } from 'react-native';
 import React, { PureComponent } from 'react';
 import TextStyles from '../../theme/TextStyles';
+import ViewStyles from '../../theme/ViewStyles';
 
 import CommonButton from '../../CommonComponents/CommonButton';
 
 export default class LoginScene extends PureComponent {
 	render() {
 		return (
-			<View style={styles.container}>
+			<View style={ViewStyles.container}>
 				<TextInput placeholder={'Username'} style={TextStyles.formInput} />
 				<TextInput placeholder={'Password'} style={[TextStyles.formInput, { marginBottom: 20 }]} />
 				<CommonButton title={'Login'} onPress={() => this.props.navigation.navigate('Home')} />
@@ -16,11 +17,3 @@ export default class LoginScene extends PureComponent {
 		);
 	}
 }
-const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		paddingTop: 65,
-		paddingHorizontal: 40,
-		backgroundColor: 'white'
-	}
-});

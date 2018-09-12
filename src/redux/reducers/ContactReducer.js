@@ -1,4 +1,4 @@
-import { GET_ALL_CONTACTS, ADD_NEW_CONTACT } from '../actions/types';
+import { ADD_NEW_CONTACT } from '../actions/types';
 /* Remember that TEXT_CHANGED should be defined and must have a value otherwise it
   will be undefined and no error would popup and in the reducer we will have a
   case of undefined
@@ -13,7 +13,7 @@ const INITIAL_STATE = {
 
 export default (state = INITIAL_STATE, action) => {
 	switch (action.type) {
-		case GET_ALL_CONTACTS:
+		case ADD_NEW_CONTACT:
 			/*
 			slice of state (that the reducer last published)  +  action
 						   |
@@ -30,11 +30,6 @@ export default (state = INITIAL_STATE, action) => {
 		 Now, since old state object already has a text property so, it will be
 		 overwritten with a new value.
 		 */
-
-			return { contacts: [...state.contacts, action.contact] };
-
-		case ADD_NEW_CONTACT:
-			const contacts = [...state.contacts, action.contact];
 
 			return { contacts: [...state.contacts, action.contact] };
 		default:

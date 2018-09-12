@@ -1,14 +1,15 @@
 import { View, StyleSheet, TextInput } from 'react-native';
-import React, { PureComponent } from '../../../../../Library/Caches/typescript/2.9/node_modules/@types/react';
+import React, { PureComponent } from 'react';
 import TextStyles from '../../theme/TextStyles';
+import ViewStyles from '../../theme/ViewStyles';
 import CommonButton from '../../CommonComponents/CommonButton';
-import { connect } from '../../../../../Library/Caches/typescript/2.9/node_modules/@types/react-redux';
+import { connect } from 'react-redux';
 class ContactDetailScene extends PureComponent {
 	render() {
 		const { navigation } = this.props;
 		let index = navigation.getParam('index', 0);
 		return (
-			<View style={styles.container}>
+			<View style={ViewStyles.container}>
 				<TextInput placeholder={'Name'} style={TextStyles.formInput} value={this.props.contacts[index].name} />
 				<TextInput
 					placeholder={'Email'}
@@ -27,14 +28,7 @@ class ContactDetailScene extends PureComponent {
 		);
 	}
 }
-const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		paddingTop: 65,
-		paddingHorizontal: 40,
-		backgroundColor: 'white'
-	}
-});
+
 function mapStateToProps(state) {
 	return {
 		contacts: state.contact_reducer.contacts

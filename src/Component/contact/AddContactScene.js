@@ -1,8 +1,9 @@
-import { View, StyleSheet, TextInput, AsyncStorage } from 'react-native';
-import React, { PureComponent } from '../../../../../Library/Caches/typescript/2.9/node_modules/@types/react';
+import { View, StyleSheet, TextInput, AsyncStorage, Alert } from 'react-native';
+import React, { PureComponent } from 'react';
 import TextStyles from '../../theme/TextStyles';
+import ViewStyles from '../../theme/ViewStyles';
 import CommonButton from '../../CommonComponents/CommonButton';
-import { connect } from '../../../../../Library/Caches/typescript/2.9/node_modules/@types/react-redux';
+import { connect } from 'react-redux';
 import * as actions from '../../redux/actions';
 class AddContactScene extends PureComponent {
 	constructor(props) {
@@ -13,23 +14,33 @@ class AddContactScene extends PureComponent {
 			phoneNumber: ''
 		};
 	}
-	_storeData = async () => {
-		let contact = {
-			name: this.state.name,
-			email: this.state.email,
-			phoneNumber: this.state.phoneNumber
-		};
-		this.props.createContact(contact);
-		try {
-			await AsyncStorage.setItem('@MYCONTACTS', JSON.stringify(this.props.contacts));
-		} catch (error) {
-			// Error retrieving data
+	_storeData = () => {
+		if (!!this.state.name && !!this.state.email && !!this.state.phoneNumber) {
+			let contact = {
+				name: this.state.name,
+				email: this.state.email,
+				phoneNumber: this.state.phoneNumber
+			};
+			this.props.createContact(contact);
+
+			// try {
+			// 	await AsyncStorage.setItem('@MYCONTACTS', JSON.stringify(this.props.contacts));
+			// } catch (error) {
+			// 	// Error retrieving data
+			// }
+			this.props.navigation.goBack();
+		} else {
+			Alert.alert('Error', 'Please enter Contact details.', [
+				{
+					text: 'Ok'
+				}
+			]);
 		}
 	};
 
 	render() {
 		return (
-			<View style={styles.container}>
+			<View style={ViewStyles.container}>
 				<TextInput
 					placeholder={'Name'}
 					style={TextStyles.formInput}
@@ -40,12 +51,14 @@ class AddContactScene extends PureComponent {
 				<TextInput
 					placeholder={'Email'}
 					style={TextStyles.formInput}
+					keyboardType={'email-address'}
 					onChangeText={text => {
 						this.setState({ email: text });
 					}}
 				/>
 				<TextInput
 					placeholder={'Phone Number'}
+					keyboardType={'phone-pad'}
 					style={[TextStyles.formInput, { marginBottom: 20 }]}
 					onChangeText={text => {
 						this.setState({ phoneNumber: text });
@@ -56,13 +69,6 @@ class AddContactScene extends PureComponent {
 		);
 	}
 }
-const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		paddingTop: 65,
-		paddingHorizontal: 40
-	}
-});
 
 const mapStateToProps = state => {
 	return {
