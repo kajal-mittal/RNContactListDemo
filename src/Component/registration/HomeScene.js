@@ -12,6 +12,15 @@ class HomeScene extends PureComponent {
 
 	componentDidMount = () => {
 		this._retrieveData();
+		this.setLoginData();
+	};
+	setLoginData = async function() {
+		try {
+			const checkLogin = await AsyncStorage.getItem('@LoginComplete');
+			if (checkLogin !== 'false') {
+				await AsyncStorage.setItem('@LoginComplete', 'true');
+			}
+		} catch (error) {}
 	};
 
 	_retrieveData = async () => {
@@ -34,7 +43,10 @@ class HomeScene extends PureComponent {
 		return (
 			<View style={{ flex: 1 }}>
 				<View style={{ backgroundColor: 'blue', height: 50, width: '100%', flexDirection: 'row' }}>
-					<Text style={{ color: 'white', alignSelf: 'center', flex: 0.9 }}> Logout</Text>
+					<Text style={{ color: 'white', alignSelf: 'center', flex: 0.9 }} onPress={() => this._signOutAsync()}>
+						{' '}
+						Logout
+					</Text>
 					<Text
 						style={{ color: 'white', alignSelf: 'center', flex: 0.1 }}
 						onPress={() => {
@@ -53,6 +65,10 @@ class HomeScene extends PureComponent {
 			</View>
 		);
 	}
+	_signOutAsync = async () => {
+		await AsyncStorage.clear();
+		this.props.navigation.navigate('CheckLoginScene');
+	};
 	renderRow(data, sectionID, rowID, itemIndex, itemID) {
 		return (
 			<TouchableOpacity
