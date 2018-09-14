@@ -1,42 +1,80 @@
-import { View, StyleSheet, TextInput } from 'react-native';
+import { View, TextInput, AsyncStorage } from 'react-native';
 import React, { PureComponent } from 'react';
+import TextStyles from '../../theme/TextStyles';
+import ViewStyles from '../../theme/ViewStyles';
+import CommonButton from '../../CommonComponents/CommonButton';
+import { connect } from 'react-redux';
+import * as actions from '../../redux/actions';
+class ContactDetailScene extends PureComponent {
+	constructor(props) {
+		super(props);
 
-import FooterButton from '../../CommonComponents/FooterButton';
+		this.state = {
+			contact: this.props.navigation.state.params.rowData,
+			name: this.props.navigation.state.params.rowData.name,
+			email: this.props.navigation.state.params.rowData.email,
+			phoneNumber: this.props.navigation.state.params.rowData.phoneNumber
+		};
+	}
 
-export default class ContactDetailScene extends PureComponent {
 	render() {
+		//console.error(this.props.navigation.state.params.index);
 		return (
-			<View style={styles.container}>
-				<TextInput placeholder={'Name'} style={{ height: 40, borderColor: 'gray', borderBottomWidth: 1 }} />
+			<View style={ViewStyles.container}>
+				<TextInput
+					placeholder={'Name'}
+					style={TextStyles.formInput}
+					value={this.state.name}
+					onChangeText={name => this.setState({ name })}
+				/>
 				<TextInput
 					placeholder={'Email'}
-					style={{ height: 40, marginTop: 20, borderColor: 'gray', borderBottomWidth: 1 }}
+					keyboardType={'email-address'}
+					style={TextStyles.formInput}
+					value={this.state.email}
+					onChangeText={email => this.setState({ email })}
 				/>
 				<TextInput
 					placeholder={'Phone Number'}
-					style={{ height: 40, marginTop: 20, borderColor: 'gray', borderBottomWidth: 1, marginBottom: 20 }}
+					keyboardType={'phone-pad'}
+					style={TextStyles.formInput}
+					value={this.state.phoneNumber}
+					onChangeText={phoneNumber => this.setState({ phoneNumber })}
 				/>
-				<FooterButton title={'Update Contact'} onPress={() => this.props.navigation.navigate('Home')} />
+				<CommonButton
+					title={'Update Contact'}
+					onPress={() => {
+						const id = this.props.navigation.state.params.index;
+						this.props.contactDelete({ id });
+						setTimeout(() => {
+							let contact = {
+								name: this.state.name,
+								email: this.state.email,
+								phoneNumber: this.state.phoneNumber
+							};
+
+							this.props.createContact(contact);
+							this.props.navigation.navigate('Home');
+						}, 500);
+					}}
+				/>
 			</View>
 		);
 	}
 }
-const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		paddingTop: 65,
-		paddingHorizontal: 40,
-		backgroundColor: 'white'
-	},
-	labelInput: {
-		color: '#673AB7'
-	},
-	formInput: {
-		borderBottomWidth: 1.5,
-		marginLeft: 20,
-		borderColor: '#333'
-	},
-	input: {
-		borderWidth: 0
-	}
-});
+
+function mapStateToProps(state) {
+	return {
+		contacts: state.contacts
+	};
+}
+const mapDispatchToProps = dispatch => {
+	return {
+		createContact: contact => dispatch(actions.createContact(contact)),
+		contactDelete: id => dispatch(actions.contactDelete(id))
+	};
+};
+export default connect(
+	mapStateToProps,
+	mapDispatchToProps
+)(ContactDetailScene);

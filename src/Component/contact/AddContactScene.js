@@ -1,42 +1,82 @@
-import { View, StyleSheet, TextInput } from 'react-native';
+import { View, TextInput, Alert } from 'react-native';
 import React, { PureComponent } from 'react';
+import TextStyles from '../../theme/TextStyles';
+import ViewStyles from '../../theme/ViewStyles';
+import CommonButton from '../../CommonComponents/CommonButton';
+import { connect } from 'react-redux';
+import * as actions from '../../redux/actions';
+class AddContactScene extends PureComponent {
+	constructor(props) {
+		super(props);
+		this.state = {
+			name: '',
+			email: '',
+			phoneNumber: ''
+		};
+	}
+	_storeData = () => {
+		if (!!this.state.name && !!this.state.email && !!this.state.phoneNumber) {
+			let contact = {
+				name: this.state.name,
+				email: this.state.email,
+				phoneNumber: this.state.phoneNumber
+			};
+			this.props.createContact(contact);
+			this.props.navigation.goBack();
+		} else {
+			Alert.alert('Error', 'Please enter Contact details.', [
+				{
+					text: 'Ok'
+				}
+			]);
+		}
+	};
 
-import FooterButton from '../../CommonComponents/FooterButton';
-
-export default class AddContactScene extends PureComponent {
 	render() {
 		return (
-			<View style={styles.container}>
-				<TextInput placeholder={'Name'} style={{ height: 40, borderColor: 'gray', borderBottomWidth: 1 }} />
+			<View style={ViewStyles.container}>
+				<TextInput
+					placeholder={'Name'}
+					style={TextStyles.formInput}
+					onChangeText={text => {
+						this.setState({ name: text });
+					}}
+				/>
 				<TextInput
 					placeholder={'Email'}
-					style={{ height: 40, marginTop: 20, borderColor: 'gray', borderBottomWidth: 1 }}
+					style={TextStyles.formInput}
+					keyboardType={'email-address'}
+					onChangeText={text => {
+						this.setState({ email: text });
+					}}
 				/>
 				<TextInput
 					placeholder={'Phone Number'}
-					style={{ height: 40, marginTop: 20, borderColor: 'gray', borderBottomWidth: 1, marginBottom: 20 }}
+					keyboardType={'phone-pad'}
+					style={[TextStyles.formInput, { marginBottom: 20 }]}
+					onChangeText={text => {
+						this.setState({ phoneNumber: text });
+					}}
 				/>
-				<FooterButton title={'Add Contact'} onPress={() => this.props.navigation.navigate('Home')} />
+				<CommonButton title={'Add Contact'} onPress={this._storeData} />
 			</View>
 		);
 	}
 }
-const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		paddingTop: 65,
-		paddingHorizontal: 40,
-		backgroundColor: 'white'
-	},
-	labelInput: {
-		color: '#673AB7'
-	},
-	formInput: {
-		borderBottomWidth: 1.5,
-		marginLeft: 20,
-		borderColor: '#333'
-	},
-	input: {
-		borderWidth: 0
-	}
-});
+
+const mapStateToProps = state => {
+	return {
+		contacts: state.contacts
+	};
+};
+const mapDispatchToProps = dispatch => {
+	return {
+		createContact: contact => dispatch(actions.createContact(contact))
+	};
+};
+// Pass it as the first argument to our connect function.
+
+export default connect(
+	mapStateToProps,
+	mapDispatchToProps
+)(AddContactScene);

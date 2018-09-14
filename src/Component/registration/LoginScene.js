@@ -1,40 +1,33 @@
-import { View, StyleSheet, TextInput } from 'react-native';
+import { View, TextInput, BackHandler } from 'react-native';
 import React, { PureComponent } from 'react';
+import TextStyles from '../../theme/TextStyles';
+import ViewStyles from '../../theme/ViewStyles';
 
-import FooterButton from '../../CommonComponents/FooterButton';
+import CommonButton from '../../CommonComponents/CommonButton';
 
 export default class LoginScene extends PureComponent {
+	constructor(props) {
+		super(props);
+	}
+	componentDidMount() {
+		BackHandler.addEventListener('hardwareBackPress', this.handleBackPress);
+	}
+
+	componentWillUnmount() {
+		BackHandler.removeEventListener('hardwareBackPress', this.handleBackPress);
+	}
+	handleBackPress = () => {
+		BackHandler.exitApp();
+	};
+
 	render() {
 		return (
-			<View style={styles.container}>
-				<TextInput placeholder={'Username'} style={{ height: 40, borderColor: 'gray', borderBottomWidth: 1 }} />
-
-				<TextInput
-					placeholder={'Password'}
-					style={{ height: 40, marginTop: 20, borderColor: 'gray', borderBottomWidth: 1, marginBottom: 20 }}
-				/>
-				<FooterButton title={'Login'} onPress={() => this.props.navigation.navigate('Home')} />
-				<FooterButton title={'Signup'} onPress={() => this.props.navigation.navigate('Signup')} />
+			<View style={ViewStyles.container}>
+				<TextInput placeholder={'Username'} style={TextStyles.formInput} />
+				<TextInput placeholder={'Password'} style={[TextStyles.formInput, { marginBottom: 20 }]} />
+				<CommonButton title={'Login'} onPress={() => this.props.navigation.navigate('Home')} />
+				<CommonButton title={'Signup'} onPress={() => this.props.navigation.navigate('Signup')} />
 			</View>
 		);
 	}
 }
-const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		paddingTop: 65,
-		paddingHorizontal: 40,
-		backgroundColor: 'white'
-	},
-	labelInput: {
-		color: '#673AB7'
-	},
-	formInput: {
-		borderBottomWidth: 1.5,
-		marginLeft: 20,
-		borderColor: '#333'
-	},
-	input: {
-		borderWidth: 0
-	}
-});
